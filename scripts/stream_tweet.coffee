@@ -1,43 +1,20 @@
 cronJob = require('cron').CronJob
 random  = require('hubot').Response::random
 mysql   = require('mysql')
+twit    = require('twit')
 
 module.exports = (robot) ->
 
-  do_tweet = ->
-    db_host = "aa1tnchjgi9mxox.c42qwtg1d1mo.ap-northeast-1.rds.amazonaws.com"
-    db_user = "stgAdminmart"
-    db_pass = "stgHousmile"
-    db_name = "twitter"
-    mysql_options =
-      host: db_host
-      user: db_user
-      password: db_pass
-      database: db_name
-    my_client = mysql.createConnection(mysql_options)
-    my_client.connect()
-
-    sql = "select content from promotion_tweets"
-
-    @property = []
-    my_client.query(sql, (err, rows, fields) =>
-      return if err
-      rows.forEach (row) =>
-        @property.push row.content
-      selected_property = random @property
-      tweet = """
-        #{selected_property} #housmart
-      """
-      robot.send {}, tweet 
-    )
-    my_client.end()
-
-  cronjob = new cronJob(
-    cronTime: "0 0,30 * * * *"
-    start: true
-    timeZone: "Asia/Tokyo"
-    onTick: ->
-      do_tweet()
-    )
-
-  cronjob.start()
+  keys = {
+    consumer_key: process.env.HUBOT_TWITTER_KEY
+    consumer_secret: process.env.HUBOT_TWITTER_SECRET
+    access_token: process.env.HUBOT_TWITTER_TOKEN
+    access_token_secret: process.env.HUBOT_TWITTER_TOKEN_SECRET
+  }
+  @client = new twit(keys)
+  stream  = @client.stream('statuses/filter', { track: '中古マンション', language: 'ja' })
+  
+  stream.on('tweet', (tweet) ->
+    console.log(tweet)
+    robot.send(tweet, "\@#{tweet.user.screen_name} #{tweet.user.name}さん、こちら興味あれば御覧ください。\n http://housmart.com/campaigns/show_service?inflow_id=tw #housmart")
+  )

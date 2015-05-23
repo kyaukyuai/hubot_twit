@@ -5,10 +5,10 @@ mysql   = require('mysql')
 module.exports = (robot) ->
 
   do_tweet = ->
-    db_host = "aa1tnchjgi9mxox.c42qwtg1d1mo.ap-northeast-1.rds.amazonaws.com"
-    db_user = "stgAdminmart"
-    db_pass = "stgHousmile"
-    db_name = "twitter"
+    db_host = process.env.DB_HOST
+    db_user = process.env.DB_USER
+    db_pass = process.env.DB_PASS
+    db_name = process.env.DB_NAME
     mysql_options =
       host: db_host
       user: db_user
@@ -40,4 +40,4 @@ module.exports = (robot) ->
       do_tweet()
     )
 
-  cronjob.start()
+  cronjob.start
