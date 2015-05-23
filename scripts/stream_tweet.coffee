@@ -15,6 +15,5 @@ module.exports = (robot) ->
   stream  = @client.stream('statuses/filter', { track: '中古マンション', language: 'ja' })
   
   stream.on('tweet', (tweet) ->
-    console.log(tweet)
     robot.send(tweet, "\@#{tweet.user.screen_name} #{tweet.user.name}さん、こちら興味あれば御覧ください。\n http://housmart.com/campaigns/show_service?inflow_id=tw #housmart")
   )

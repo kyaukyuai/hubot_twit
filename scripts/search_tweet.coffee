@@ -16,7 +16,6 @@ module.exports = (robot) ->
   do_tweet = ->
     @client.get('search/tweets', { q: 'ハウスマート', count: 10 }, (err, data, response) ->
       data.statuses.forEach (tweet) ->
-        console.log(tweet)
         robot.send(tweet, "\@#{tweet.user.screen_name} #{tweet.user.name}さん、もし宜しければ、こちら興味あれば御覧ください。\n http://housmart.com/campaigns/show_service?inflow_id=tw #housmart")
     )
 
