@@ -26,14 +26,14 @@ module.exports = (robot) ->
         @property.push row.content
       selected_property = random @property
       tweet = """
-        #{selected_property} #housmart
+        #{selected_property} #Housmart
       """
       robot.send {}, tweet 
     )
     my_client.end()
 
   cronjob = new cronJob(
-    cronTime: "0 0,30 * * * *"
+    cronTime: "0 45 * * * *"
     start: true
     timeZone: "Asia/Tokyo"
     onTick: ->
